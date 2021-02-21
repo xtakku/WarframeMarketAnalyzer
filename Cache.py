@@ -1,17 +1,21 @@
 from datetime import datetime
 import requests
+import time
 
 
 class Cache:
     def __init__(self):
         self.requests_cache = {}
+        self.session = requests.session()
+        self.session.headers.update({
+            "platform": "pc",
+            "language": "en"
+        })
 
-    def get(self, url):
+    def get(self, url, key_ttl=86400):
         if url.startswith("https://api.warframe.market"):
-            key_ttl = 3600
             key_name = url.split("/")[-2]
         else:
-            key_ttl = 86400
             key_name = url.split("/")[-1]
 
         is_cached = False
@@ -23,7 +27,8 @@ class Cache:
         if is_cached:
             return self.requests_cache[key_name]
         else:
-            response = CachedResponse(requests.get(url))
+            response = CachedResponse(self.session.get(url))
+            time.sleep(1/3)
             if response.status_code == 200:
                 self.requests_cache[key_name] = response
             return response
