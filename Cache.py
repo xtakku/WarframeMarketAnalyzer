@@ -19,16 +19,16 @@ class Cache:
             is_cached = False
         
         if is_cached:
-            return self.requests_cache[key_name].response
+            return self.requests_cache[key_name]
         else:
             response = CachedResponse(requests.get(url))
-            if response.response.status_code == 200:
+            if response.status_code == 200:
                 self.requests_cache[key_name] = response
-            return response.response
+            return response
 
 
-class CachedResponse(requests.Response):
+class CachedResponse:
     def __init__(self, response):
-        super().__init__()
-        self.response = response
+        self.text = response.text
+        self.status_code = response.status_code
         self.timestamp = datetime.now()
