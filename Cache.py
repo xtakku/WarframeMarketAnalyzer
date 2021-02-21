@@ -39,27 +39,33 @@ class Cache:
 
     def load(self):
         if os.path.isfile(self.cache_file):
-            try:
-                with open(self.cache_file, mode="r", encoding="utf-8") as file:
-                    loaded_cache = json.load(file)
-                print(loaded_cache)
-            except json.JSONDecodeError:
-                file.close()
+            with open(self.cache_file, "r", encoding="utf-8") as file:
+                for line in file:
+                    temp = line.split(";")
+                    response = TempResponse()
+                    response.timestamp = datetime.strptime(temp[1], "%Y-%m-%d %H:%M:%S.%f")
+                    response.status_code = int(temp[2])
+                    response.json_data = json.loads(temp[3])
+                    self.requests_cache[temp[0]] = response
 
     def save(self):
-        cache_dump = []
-        for cached_request in self.requests_cache.keys():
-            cache_dump.append({
-                "json": str(self.requests_cache[cached_request].json()),
-                "status_code": self.requests_cache[cached_request].status_code,
-                "timestamp": str(self.requests_cache[cached_request].timestamp)
-            })
         with open(self.cache_file, "w", encoding="utf-8") as file:
-            json.dump(cache_dump, file)
+            for key in self.requests_cache.keys():
+                file.write(key + ";")
+                file.write(str(self.requests_cache[key].timestamp) + ";")
+                file.write(str(self.requests_cache[key].status_code) + ";")
+                file.write(str(json.dumps(self.requests_cache[key].json_data, indent=4, sort_keys=True)) + "\n")
 
 
 class CachedResponse:
     def __init__(self, response):
-        self.json = response.json
+        self.json_data = response.json()
         self.status_code = response.status_code
         self.timestamp = datetime.now()
+
+
+class TempResponse:
+    def __init(self):
+        self.json_data = {}
+        self.status_code = 0
+        self.timestamp = 0

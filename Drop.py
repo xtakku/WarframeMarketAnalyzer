@@ -28,7 +28,7 @@ class Drop:
         response = self.cache.get("https://api.warframe.market/v1/items/" + search_string + "/statistics")
         if response.status_code != 200:
             return "N/A"
-        item_data = response.json()["payload"]["statistics_closed"]
+        item_data = response.json_data["payload"]["statistics_closed"]
         if len(item_data["48hours"]) > 0:
             return item_data["48hours"][0]["wa_price"]
         elif len(item_data["48hours"]) == 0 and len(item_data["90days"]) > 0:
