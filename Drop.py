@@ -1,5 +1,4 @@
 from bs4 import BeautifulSoup
-import json
 
 
 class Drop:
@@ -28,12 +27,11 @@ class Drop:
     def get_price(self):
         search_string = "_".join(self.name.lower().split(" "))
         if self.name.split(" ")[-1][-1] in [str(x) for x in range(10)]:
-            search_string += " Intact"
-        response = self.cache.get("https://warframe.market/items/" + search_string)
+            search_string += "_intact"
+        response = self.cache.get("https://api.warframe.market/v1/items/" + search_string + "/orders")
         if response.status_code != 200:
             return "N/A"
-        doc = BeautifulSoup(response.text, "html.parser")
-        item_data = json.loads(doc.select_one("html script#application-state").contents[0])
+        item_data = response.json()
         # Filter listed orders
         order_prices = []
         for order in item_data["payload"]["orders"]:

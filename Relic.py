@@ -1,5 +1,3 @@
-import json
-
 from Drop import Drop
 
 
@@ -28,7 +26,7 @@ class Relic(Drop):
         response = self.cache.get("https://api.warframestat.us/drops/search/" + search_string.lower())
         if response.status_code != 200:
             return "N/A"
-        drops = json.loads(response.text)
+        drops = response.json()
         # Check if relic is vaulted
         if len(drops) in [6, 24]:
             self.vaulted = True

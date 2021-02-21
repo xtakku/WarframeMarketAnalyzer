@@ -7,10 +7,12 @@ class Cache:
         self.requests_cache = {}
 
     def get(self, url):
-        key_name = url.split("/")[-1]
-        key_ttl = 3600
-        if "market" not in url:
+        if url.startswith("https://api.warframe.market"):
+            key_ttl = 3600
+            key_name = url.split("/")[-2]
+        else:
             key_ttl = 86400
+            key_name = url.split("/")[-1]
 
         is_cached = False
         if key_name in self.requests_cache.keys():
@@ -29,6 +31,6 @@ class Cache:
 
 class CachedResponse:
     def __init__(self, response):
-        self.text = response.text
+        self.json = response.json
         self.status_code = response.status_code
         self.timestamp = datetime.now()
