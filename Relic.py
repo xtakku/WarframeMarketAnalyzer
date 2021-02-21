@@ -28,9 +28,12 @@ class Relic(Drop):
             return "N/A"
         drops = response.json()
         # Check if relic is vaulted
-        if len(drops) in [6, 24]:
+        intact_search_string = " ".join([temp[0], temp[1], "Relic"])
+        intact_response = self.cache.get("https://api.warframestat.us/drops/search/" + intact_search_string.lower())
+        intact_drops = intact_response.json()
+        if len(intact_drops) == 24:
             self.vaulted = True
-        if search_string[0:6] in ["Neo O1", "Axi A2", "Axi A5", "Axi V8"]:
+        if intact_search_string[0:6] in ["Neo O1", "Axi A2", "Axi A5", "Axi V8"]:
             self.vaulted = "Baro"
         # Aggregate possible drops
         loot_table = {}
