@@ -1,6 +1,3 @@
-from bs4 import BeautifulSoup
-
-
 class Drop:
     def __init__(self, c, name):
         self.name = name.strip()
