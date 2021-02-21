@@ -21,6 +21,7 @@ class WarframeMarketAnalyzer:
                     break
         for drop in sorted_drops.keys():
             print(drop + ": " + str(sorted_drops[drop]))
+        self.cache.save()
 
     def print_single_relic(self, relic_name):
         relic = Relic(self.cache, relic_name)
@@ -42,3 +43,4 @@ class WarframeMarketAnalyzer:
         else:
             print("Average Drop Value: " + str(round(total / 100, 1)))
         print("Relic Market Value: " + str(relic.platinum))
+        self.cache.save()
