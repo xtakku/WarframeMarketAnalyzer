@@ -65,7 +65,7 @@ class CachedResponse:
 
 
 class TempResponse:
-    def __init(self):
+    def __init__(self):
         self.json_data = {}
         self.status_code = 0
         self.timestamp = 0
